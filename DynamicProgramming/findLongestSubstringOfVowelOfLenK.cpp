@@ -2,6 +2,9 @@
 You have given a string of lower case characters, and a integer k < length of the string.
 You need to find the substring having maximum vowel count of length k.
 */
+// findLongestSubstringWithVowel.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -15,48 +18,35 @@ bool isVowel(char c) {
 string findLOngestSubstringofVowel(string s, int k) {
 	string res = "";
 	int len = s.length();
-	int start = 0;
-	int end = k - 1;
-	int actualStart = 0;
-	int targetStart = 0;
-	int targetEnd = 0;
+	if (k > len) return "Not found!";
 	int maxCnt = 0;
 	int currCnt = 0;
-	int preCnt = 0;
-	bool isC = false;
-	int pos;
+	int start = 0;
+	int end = 0;
 
-	while (end < len) {
-		pos = k;
-		preCnt = 0;
-		isC = false;
-		for (int i = start; i <= end; i++) {
-			if (isVowel(s[i])) {
-				currCnt++;
-				if (isC == false) {
-					preCnt++;
-				} else {
-					if(pos == end)
-						pos = i;
-				}
-			} else {
-				isC = true;
-			}
-		}
+	for (int i = 0; i < k; i++) {
+		if (isVowel(s[i])) currCnt++;
+	}
+	maxCnt = currCnt;
+	if (currCnt > 0) {
+		start = 0;
+		end = k - 1;
+	}
+	
+	for (int i = k; i < len; i++) {
+		if (isVowel(s[i - k])) currCnt--;
+		if (isVowel(s[i])) currCnt++;
 		if (currCnt > maxCnt) {
 			maxCnt = currCnt;
-			targetStart = actualStart;
-			targetEnd = end;
+			start = i - k - 1;
+			end = i;
 		}
+	}
 
-		start = end + 1;
-		end = end + pos;
-		actualStart = start - (k - pos);
-		currCnt -= preCnt;
+	if (start != end) {
+		res = s.substr(start, end - start + 1);
 	}
-	if (targetStart + k - 1 == targetEnd) {
-		res = s.substr(targetStart, targetEnd - targetStart + 1);
-	}
+
 	if (res == "")
 		res = "Not found!";
 	return res;
